@@ -1,25 +1,58 @@
 package testproject;
 
+import org.junit.Test;
+
 public class 最长回文串 {
-    public static void main(String[] args) {
-        for(int i=1;i<=204;i++){
-            if(i<52){
-                System.out.println("1_"+i+"_cut.jpg"+" "+"0");
-            }
-            if(i>=52&&i<96){
-                System.out.println("2_"+(i-51)+"_cut.jpg"+" "+"1");
-            }
-            if(i>=96&&i<174){
-                System.out.println("3_"+(i-95)+"_cut.jpg"+" "+"2");
-            }
-            if(i>=174&&i<198){
-                System.out.println("4_"+(i-173)+"_cut.jpg"+" "+"3");
-            }
-            if(i>198){
-                System.out.println("5_"+(i-198)+"_cut.jpg"+" "+"4");
-            }
-
+    public String longestPalindrome(String s){
+        if(s==null||s.length()<1){
+            return "";
         }
-
+        int start=0,end=0;
+        for(int i=0;i<s.length();i++){
+            int len1=expandAround(s,i,i);//单个可以
+            int len2=expandAround(s,i,i+1);
+            int len=Math.max(len1,len2);
+            //得到最长字串的长度，开始更新Start和end
+            if(len>end-start){
+                start=i-(len-1)/2;
+                end=i+len/2;
+            }
+        }
+        return s.substring(start,end+1);
+    }
+    public int expandAround(String s,int left,int right){
+        while (left>=0&&right<s.length()&&s.charAt(left)==s.charAt(right)){
+            --left;
+            ++right;
+        }
+        return right-left-1;
+    }
+    //
+    public String longestPalindrome1(String s){
+        if(s==null||s.length()<2)
+            return s;
+        int start=0,end=0;
+        for(int i=0;i<s.length();i++){
+            int len1=extendChar(s,i,i);
+            int len2=extendChar(s,i,i+1);
+            int len=Math.max(len1,len2);
+            if(len>end-start){
+                start=i-(len-1)/2;
+                end=i+len/2;
+            }
+        }
+        return s.substring(start,end+1);
+    }
+    public int extendChar(String s,int left,int right){
+        while (left>=0&&right<s.length()&&s.charAt(left)==s.charAt(right)){
+            left--;
+            right++;
+        }
+        return right-left-1;//返回最长的长度
+    }
+    @Test
+    public void test(){
+        String s="babad";
+        System.out.println(longestPalindrome1(s));
     }
 }
