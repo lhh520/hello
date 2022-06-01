@@ -36,26 +36,30 @@ public class 火柴拼正方形 {
 
     public boolean makesquare1(int[] matchsticks){
         Arrays.sort(matchsticks);//先进行排序
+        for (int i = 0, j = matchsticks.length - 1; i < j; i++, j--) {
+            int temp = matchsticks[i];
+            matchsticks[i] = matchsticks[j];
+            matchsticks[j] = temp;
+        }
         int sum=0;
         for(int i=0;i<matchsticks.length;i++){
             sum+=matchsticks[i];
         }
         int[]bucket=new int[4];
-        Arrays.fill(bucket,0);
+        //Arrays.fill(bucket,0);
         return backtrace(0,matchsticks,bucket,sum/4);
     }
     public boolean backtrace(int index,int[]matchsticks,int[] bucket,int edge){
-        if(index>=matchsticks.length){
+        if(index==matchsticks.length){
             return true;
         }
         for(int j=0;j<4;j++){
-            if(bucket[j]+matchsticks[index]>edge){
-                continue;
-            }
             bucket[j]+=matchsticks[index];
-            if(backtrace(index+1,matchsticks,bucket,edge)){
+
+            if(bucket[j]<edge&&backtrace(index+1,matchsticks,bucket,edge)){
                 return true;
             }
+
             bucket[j]-=matchsticks[index];
         }
         return false;
@@ -63,6 +67,7 @@ public class 火柴拼正方形 {
 
     @Test
     public void test(){
-
+        int[]matchsticks =new int[]{1,1,2,2,2};
+        System.out.println(makesquare1(matchsticks));
     }
 }
