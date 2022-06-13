@@ -16,12 +16,6 @@ public class 网络延迟时间 {
         System.out.println(Arrays.toString(inDeg));
         queue.add(k);
         flag[k]=true;
-//        for(int i=1;i<inDeg.length;i++){
-//            if(inDeg[i]==0){
-//                queue.add(i);
-//                flag[i]=true;
-//            }
-//        }
         int second=0;
         while (!queue.isEmpty()){
             int sz=queue.size();
