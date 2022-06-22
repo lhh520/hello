@@ -1,48 +1,21 @@
 package stack;
 
-
-import org.junit.Test;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-
-public class GaussCheck {
-
+public class Gauss {
     private boolean isGauss;
+    private double maxDeviation;
 
-    private StatisticConstant statisticConstant;
-
-    public GaussCheck(boolean isGauss, StatisticConstant statisticConstant) {
-        this.isGauss = isGauss;
-        this.statisticConstant = statisticConstant;
+    public double getMaxDeviation() {
+        return maxDeviation;
     }
 
-    public StatisticConstant getStatisticConstant() {
-        return statisticConstant;
-    }
-
-    public void setStatisticConstant(StatisticConstant statisticConstant) {
-        this.statisticConstant = statisticConstant;
-    }
-
-
-    public boolean isGauss() {
-        return isGauss;
-    }
-
-    public void setGauss(boolean gauss) {
-        isGauss = gauss;
-    }
-
-
-    public static GaussCheck KSTest(Double[] list) {
-
-        if (list == null || list.length == 0) {
-            return new GaussCheck(false, new StatisticConstant());
+    public StatisticConstant getStatisticConstant(Double[] list) {
+        if (list == null || list.length == 0){
+            return null;
         }
-
         int length = list.length;     /// TODO 原始数组长度
         double median = 0.0D;   //中位数
         double upperQuartile = list[length * 3 / 4];  //上四分位
@@ -53,8 +26,6 @@ public class GaussCheck {
         } else {
             median = list[length / 2];
         }
-
-
         TreeMap<Double, Integer> map = new TreeMap<>();  ///有序map,key-原始值,value-频数
 
         double sum = 0.00;
@@ -118,18 +89,71 @@ public class GaussCheck {
                 maxDeviation = temp1;//这里下手
             }
         }
-
+        this.maxDeviation=maxDeviation;
         double d = getD(length);
-        boolean isGauss = checkGauss(d, maxDeviation);
+        isGauss = checkGauss(d, maxDeviation);
 
         //统计常量
         StatisticConstant statisticConstant = new StatisticConstant(avgNum, median, modeNum, upperQuartile,
                 downQuartile, var, deviation, variation, range, maxNum, minNum);
 
-        return new GaussCheck(isGauss, statisticConstant);
+
+
+
+        return statisticConstant;
     }
 
-
+    public boolean isGauss() {
+        return isGauss;
+    }
+    private static double gauss(Double b) {
+        Double a = -10000D;
+        Double sum = 0.00;
+        Integer n = 10000;
+        for (int i = 1; i < n; i++) {
+            double t = temp(a, b, n, i);
+            sum += f(t);
+        }
+        return (2 * sum + f(a) + f(b)) * (b - a) / (2 * n);    //梯形面积
+    }
+    private static double temp(Double a, Double b, Integer n, Integer i) {
+        return a + i * (b - a) / n;
+//        return a + (2 * i - 1) * (b - a) /(2 * n);
+    }
+    /**
+     * 正态分布被积函数
+     *
+     * @param t
+     * @return
+     */
+    private static double f(double t) {
+        return 1 / Math.sqrt(2 * Math.PI) * Math.exp(-t * t / 2);
+    }
+    /**
+     * 计算累计频数
+     */
+    private static int cumulativeFrequency(Integer[] arr, int n) {
+        if (n == 0) return arr[0];
+        else {
+            return cumulativeFrequency(arr, n - 1) + arr[n];
+        }
+    }
+    private static double getD(Integer n) {
+        if (n > 0 && n <= 5) {
+            return 0.562;
+        } else if (n > 5 && n <= 10) {
+            return 0.409;
+        } else if (n > 10 && n <= 20) {
+            return 0.294;
+        } else if (n > 20 && n <= 30) {
+            return 0.242;
+        } else if (n > 30 && n <= 50) {
+            return 0.189;
+        } else if (n > 50) {
+            return 1.36 / Math.sqrt(n);
+        }
+        return -0.1;
+    }
     public static Map drawData(Double u, Double sima) {
         Double t = u-3*sima;
         TreeMap<Double, Double> map = new TreeMap<>();
@@ -151,107 +175,15 @@ public class GaussCheck {
 
         return dataMap;
     }
-
-    /**
-     * 默认置信度：a=0.05
-     *
-     * @param d
-     * @param maxDeviation
-     * @return
-     */
+    private static double densityFunc(Double x, Double u, Double sigma) {
+        return 1.0 / (Math.sqrt(2 * Math.PI) * sigma) * Math.exp(-(x - u) * (x - u) / (2 * sigma * sigma));
+    }
     private static boolean checkGauss(Double d, Double maxDeviation) {
         if (maxDeviation >= d)
             return false;          // 拒绝原假设  p< 0.05
         else
             return true;            //接受原假设   ---服从正态分布  p> 0.05
 
-    }
-
-
-    /**
-     * 默认置信度：a=0.05
-     *
-     * @param n 样本数量
-     * @return
-     */
-    private static double getD(Integer n) {
-        if (n > 0 && n <= 5) {
-            return 0.562;
-        } else if (n > 5 && n <= 10) {
-            return 0.409;
-        } else if (n > 10 && n <= 20) {
-            return 0.294;
-        } else if (n > 20 && n <= 30) {
-            return 0.242;
-        } else if (n > 30 && n <= 50) {
-            return 0.189;
-        } else if (n > 50) {
-            return 1.36 / Math.sqrt(n);
-        }
-        return -0.1;
-    }
-
-    /**
-     * 正态分布概率密度
-     *
-     * @param b
-     * @return
-     */
-    private static double gauss(Double b) {
-        Double a = -10000D;
-        Double sum = 0.00;
-        Integer n = 10000;
-        for (int i = 1; i < n; i++) {
-            double t = temp(a, b, n, i);
-            sum += f(t);
-        }
-        return (2 * sum + f(a) + f(b)) * (b - a) / (2 * n);    //梯形面积
-    }
-
-    /**
-     * 区间的中间值
-     *
-     * @param a 下限
-     * @param b 上限
-     * @param n 等分大小
-     * @param i 第几区间
-     * @return
-     */
-    private static double temp(Double a, Double b, Integer n, Integer i) {
-        return a + i * (b - a) / n;
-//        return a + (2 * i - 1) * (b - a) /(2 * n);
-    }
-
-    /**
-     * 正态分布被积函数
-     *
-     * @param t
-     * @return
-     */
-    private static double f(double t) {
-        return 1 / Math.sqrt(2 * Math.PI) * Math.exp(-t * t / 2);
-    }
-
-    /**
-     * 正态分布概率密度函数
-     *
-     * @param x     因变量
-     * @param u     均值（数学期望）
-     * @param sigma 标准差
-     * @return
-     */
-    private static double densityFunc(Double x, Double u, Double sigma) {
-        return 1.0 / (Math.sqrt(2 * Math.PI) * sigma) * Math.exp(-(x - u) * (x - u) / (2 * sigma * sigma));
-    }
-
-    /**
-     * 计算累计频数
-     */
-    private static int cumulativeFrequency(Integer[] arr, int n) {
-        if (n == 0) return arr[0];
-        else {
-            return cumulativeFrequency(arr, n - 1) + arr[n];
-        }
     }
 
     public static void main(String[] args) {
@@ -317,15 +249,9 @@ public class GaussCheck {
                 10.9759946806298D,
                 6.10218424095365D
         };
-        GaussCheck dd=GaussCheck.KSTest(list);
-        StatisticConstant ss=dd.getStatisticConstant();
-        double uu=ss.getMean();
-        double sigma=ss.getDeviation();
-        Map dataMap =dd.drawData(uu,sigma);//图形绘制
-        System.out.println(dd.isGauss);
+        Gauss gg=new Gauss();
+        StatisticConstant sc=gg.getStatisticConstant(list);
+        System.out.println(gg.isGauss);
+        System.out.println(gg.getMaxDeviation());
     }
-
 }
-
-
-

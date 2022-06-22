@@ -2,15 +2,8 @@ package stack;
 
 
 
-import java.io.Serializable;
+public class StatisticConstant{
 
-/**
- * Created by kay on 2018/1/30.
- * 常用统计量
- */
-public class StatisticConstant implements Serializable{
-
-    private static final long serialVersionUID = 1256139578174896657L;
 
     private double mean;	//平均值
 
