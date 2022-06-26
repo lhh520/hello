@@ -96,10 +96,6 @@ public class Gauss {
         //统计常量
         StatisticConstant statisticConstant = new StatisticConstant(avgNum, median, modeNum, upperQuartile,
                 downQuartile, var, deviation, variation, range, maxNum, minNum);
-
-
-
-
         return statisticConstant;
     }
 
@@ -118,7 +114,6 @@ public class Gauss {
     }
     private static double temp(Double a, Double b, Integer n, Integer i) {
         return a + i * (b - a) / n;
-//        return a + (2 * i - 1) * (b - a) /(2 * n);
     }
     /**
      * 正态分布被积函数
