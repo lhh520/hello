@@ -2,7 +2,9 @@ package testproject;
 
 import org.junit.Test;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.Stack;
 
 public class 队列中可以看到的人数 {
@@ -29,7 +31,6 @@ public class 队列中可以看到的人数 {
         return ans;
     }
     public int[] canSeePersonsCount1(int[] heights){
-        Stack<Integer>stack=new Stack<>();
         int len=heights.length;
         Stack<Integer>stack1=new Stack<>();
         int[]ans=new int[len];
@@ -45,10 +46,26 @@ public class 队列中可以看到的人数 {
         }
         return ans;
     }
+    //
+    public int[] canSeePersonsCount12(int[] heights){
+        int[]res=new int[heights.length];
+        Deque<Integer>stack=new ArrayDeque<>();
+        for(int i=heights.length-1;i>=0;i--){
+            int ans=0;
+            while (stack.size()>0&&heights[i]>stack.peekFirst()){
+                stack.pollFirst();
+                ans++;
+            }
+            stack.addFirst(heights[i]);
+            res[i]=stack.size()==1?ans:ans+1;
+        }
+        return res;
+    }
+
     @Test
     public void test(){
         int[]heights=new int[]{10,6,8,5,11,9};
-        int[]yy=canSeePersonsCount(heights);
+        int[]yy=canSeePersonsCount1(heights);
         System.out.println(Arrays.toString(yy));
     }
 }
