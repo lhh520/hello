@@ -1,5 +1,7 @@
 package 代码随想录二刷;
 
+import org.junit.Test;
+
 import java.util.*;
 
 public class 贪心算法 {
@@ -21,5 +23,11 @@ public class 贪心算法 {
         }else {
             return false;
         }
+    }
+    @Test
+    public void test(){
+        String s="27";
+        int number=-1&8;
+        System.out.println(Integer.toBinaryString(number));
     }
 }
