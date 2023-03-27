@@ -84,6 +84,8 @@ public class Compare {
 
     public Integer isShunZi(String cs[]) {
         // 1. a为14
+
+
         int n = cs.length, nums[] = new int[n];
         String c;
         for (int i = 0; i < n; i++) {
