@@ -8,7 +8,7 @@ public class TreeAncestor {
     public TreeAncestor(int n, int[] parent) {
         int m=32 - Integer.numberOfLeadingZeros(n);
         pa=new int[n][m];//
-        for(int i=0;i<m;i++){
+        for(int i=0;i<n;i++){
             pa[i][0]=parent[i];//每一个节点的0代祖先都是自己
         }
         for(int i=0;i<m-1;i++){
